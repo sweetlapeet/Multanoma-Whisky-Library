@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multanoma Whisky Library Promo Code", "Multanoma Whisky Library Promo Code\Multanoma Whisky Library Promo Code.csproj", "{0E10B0D5-F153-4F10-A091-C1863B93EFD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Multonmah Whiskey Library Check Ticket Availablity", "Multonmah Whiskey Library Check Ticket Availablity\Multonmah Whiskey Library Check Ticket Availablity.csproj", "{50CAB2E4-3943-4EDC-BFDB-5BDB3F0B0DEC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0E10B0D5-F153-4F10-A091-C1863B93EFD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E10B0D5-F153-4F10-A091-C1863B93EFD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E10B0D5-F153-4F10-A091-C1863B93EFD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E10B0D5-F153-4F10-A091-C1863B93EFD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50CAB2E4-3943-4EDC-BFDB-5BDB3F0B0DEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50CAB2E4-3943-4EDC-BFDB-5BDB3F0B0DEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50CAB2E4-3943-4EDC-BFDB-5BDB3F0B0DEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50CAB2E4-3943-4EDC-BFDB-5BDB3F0B0DEC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F333FE31-2188-41F4-AA21-88962338A2E9}
+	EndGlobalSection
+EndGlobal
