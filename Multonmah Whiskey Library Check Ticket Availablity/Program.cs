@@ -23,6 +23,7 @@ internal class Program
         string expirationDate = "09/28"; // Replace with your card expiration date
         string cvc = "123"; // Replace with your card CVC code
         int minTicketsleft = 95;
+        DateTime WaitDate = DateTime.Parse("12 / 20 / 24");
         string url = "https://mwlpdx.com/event/new-years-eve-celebration-2/";
         using (IWebDriver driver = new ChromeDriver())
         {
@@ -38,7 +39,7 @@ internal class Program
                     IWebElement quantityElement = wait.Until(d => d.FindElement(By.ClassName("tribe-tickets__item__extra__available__quantity")));
                     int availableQuantity = int.Parse(quantityElement.Text);
 
-                    if (availableQuantity <= minTicketsleft)
+                    if ((availableQuantity <= minTicketsleft) && (DateTime.Now < WaitDate))
                     {
                         Console.WriteLine($"Available tickets: {availableQuantity}. Proceeding...");
 
@@ -99,53 +100,57 @@ internal class Program
                         driver.FindElement(By.Id("billing_postcode")).SendKeys(zipCode);
                         driver.FindElement(By.Id("billing_phone")).SendKeys(phoneNumber);
                         driver.FindElement(By.Id("billing_email")).SendKeys(email);
-
                         try
                         {
                             //// Fill in credit card details
-                            //// Locate the Stripe iframe
-                            //IWebElement stripeIframe = wait.Until(d => d.FindElement(By.CssSelector("iframe[name^='__privateStripeFrame']")));
-
-                            //// Switch to the iframe context
-                            //driver.SwitchTo().Frame(stripeIframe);
-
-                            //// Locate the input field within the iframe
-                            //wait.Until(d => d.FindElement(By.CssSelector("input[name='cardnumber']"))).SendKeys(cardNumber);
-
-                            //// Locate the iframe for the expiration date field
-                            //IWebElement expiryIframe = wait.Until(d => d.FindElement(By.CssSelector("iframe[name^='__privateStripeFrame']")));
-
-                            //// Switch to the iframe
-                            //driver.SwitchTo().Frame(expiryIframe);
-
-                            //// Locate the input field within the iframe
-                            //IWebElement expiryInput = wait.Until(d => d.FindElement(By.CssSelector("input[name='exp-date']")));
-
-                            //// Send keys for the expiration date (MM/YY format)
-                            //expiryInput.SendKeys("12/25");
-                            //// Locate the Stripe iframe
-                            //IWebElement stripeIframeCVC = wait.Until(d => d.FindElement(By.CssSelector("iframe[name^='__privateStripeFrame3366']")));
-                            //driver.SwitchTo().Frame(stripeIframeCVC);
-                            //wait.Until(d => d.FindElement(By.CssSelector("input[name='cardCvc']"))).SendKeys(cvc);
-
                             // Function to interact with iframe input fields
-                            void SendKeysToIframe(string iframeSelector, string inputSelector, string keysToSend)
+
+                            List<IWebElement> iframes = driver.FindElements(By.TagName("iframe")).ToList();
+                            bool isCardfound = false;
+                            bool isExpDatefound = false;
+                            bool isCVefound = false;
+                            foreach (IWebElement iframe in iframes)
                             {
-                                IWebElement iframe = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(iframeSelector)));
+                                //driver.SwitchTo().Frame(iframe);
+
                                 driver.SwitchTo().Frame(iframe);
-                                IWebElement inputField = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(inputSelector)));
-                                inputField.SendKeys(keysToSend);
+
+                                if (isCardfound == false)
+                                {
+                                    try
+                                    {
+                                        IWebElement creditCard = driver.FindElement(By.Name("cardnumber"));
+                                        creditCard.SendKeys(cardNumber);
+                                        isCardfound = true;
+                                        goto def;
+                                    }
+                                    catch { }
+                                }
+                                if (isExpDatefound == false)
+                                {
+                                    try
+                                    {
+                                        IWebElement cardExpiry = driver.FindElement(By.Name("exp-date"));
+                                        cardExpiry.SendKeys(expirationDate.Replace("/", ""));
+                                        isExpDatefound = true;
+                                        goto def;
+                                    }
+                                    catch { }
+                                }
+                                if (isCVefound == false)
+                                {
+                                    try
+                                    {
+                                        IWebElement CSV = driver.FindElement(By.Name("cvc"));
+                                        CSV.SendKeys(cvc);
+                                        isCVefound = true;
+                                        goto def;
+                                    }
+                                    catch { }
+                                }
+                            def:
                                 driver.SwitchTo().DefaultContent();
                             }
-
-                            // Send keys to Card Number field
-                            SendKeysToIframe("iframe[src*='cardNumber']", "input", "4242424242424242");
-
-                            // Send keys to Expiry Date field
-                            SendKeysToIframe("iframe[src*='cardExpiry']", "input", "12/25");
-
-                            // Send keys to CVC field
-                            SendKeysToIframe("iframe[src*='cardCvc']", "input", "123");
 
                             Console.WriteLine("All fields filled successfully.");
                         }
@@ -158,6 +163,12 @@ internal class Program
                         //placeOrderButton.Click();
 
                         Console.WriteLine("Order placed successfully!");
+                        Thread.Sleep(100000);
+                        break;
+                    }
+                    else if (DateTime.Now >= WaitDate)
+                    {
+                        Console.WriteLine($"The date is past {WaitDate}. Ending program.");
                         break;
                     }
                     else
