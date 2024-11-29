@@ -23,6 +23,7 @@ internal class Program
         string expirationDate = "09/28"; // Replace with your card expiration date
         string cvc = "123"; // Replace with your card CVC code
         int minTicketsleft = 95;
+        DateTime WaitDate = DateTime.Parse("12 / 20 / 24");
         string url = "https://mwlpdx.com/event/new-years-eve-celebration-2/";
         using (IWebDriver driver = new ChromeDriver())
         {
@@ -38,7 +39,7 @@ internal class Program
                     IWebElement quantityElement = wait.Until(d => d.FindElement(By.ClassName("tribe-tickets__item__extra__available__quantity")));
                     int availableQuantity = int.Parse(quantityElement.Text);
 
-                    if (availableQuantity <= minTicketsleft)
+                    if ((availableQuantity <= minTicketsleft) && (DateTime.Now < WaitDate))
                     {
                         Console.WriteLine($"Available tickets: {availableQuantity}. Proceeding...");
 
@@ -163,6 +164,11 @@ internal class Program
 
                         Console.WriteLine("Order placed successfully!");
                         Thread.Sleep(100000);
+                        break;
+                    }
+                    else if (DateTime.Now >= WaitDate)
+                    {
+                        Console.WriteLine($"The date is past {WaitDate}. Ending program.");
                         break;
                     }
                     else
