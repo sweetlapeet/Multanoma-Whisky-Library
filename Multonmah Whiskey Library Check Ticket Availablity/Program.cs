@@ -99,7 +99,7 @@ internal class Program
                         driver.FindElement(By.Id("billing_postcode")).SendKeys(zipCode);
                         driver.FindElement(By.Id("billing_phone")).SendKeys(phoneNumber);
                         driver.FindElement(By.Id("billing_email")).SendKeys(email);
-
+                       // System.Threading.Thread.Sleep(100000);
                         try
                         {
                             //// Fill in credit card details
@@ -129,23 +129,74 @@ internal class Program
                             //wait.Until(d => d.FindElement(By.CssSelector("input[name='cardCvc']"))).SendKeys(cvc);
 
                             // Function to interact with iframe input fields
-                            void SendKeysToIframe(string iframeSelector, string inputSelector, string keysToSend)
+
+                            List<IWebElement> iframes = driver.FindElements(By.TagName("iframe")).ToList();
+                            bool isCardfound = false;
+                            bool isExpDatefound = false;
+                            bool isCVefound = false;
+                            foreach (IWebElement iframe in iframes)
                             {
-                                IWebElement iframe = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(iframeSelector)));
+                                //driver.SwitchTo().Frame(iframe);
+                               
+                                
                                 driver.SwitchTo().Frame(iframe);
-                                IWebElement inputField = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(inputSelector)));
-                                inputField.SendKeys(keysToSend);
+
+                                if (isCardfound == false)
+                                {
+                                    try
+                                    {
+                                        IWebElement creditCard = driver.FindElement(By.Name("cardnumber"));
+                                        creditCard.SendKeys("4242424242424242");
+                                        isCardfound = true;
+                                        goto def;
+                                    }
+                                    catch { }
+                                }
+                                if (isExpDatefound == false)
+                                {
+                                    try
+                                    {
+                                        IWebElement cardExpiry = driver.FindElement(By.Name("exp-date"));
+                                        cardExpiry.SendKeys("12/25");
+                                        isExpDatefound = true;
+                                        goto def;
+                                    }
+                                    catch { }
+                                } 
+                                if (isCVefound == false)
+                                {
+                                    try
+                                    {
+                                        IWebElement CSV = driver.FindElement(By.Name("cvc"));
+                                        CSV.SendKeys("123");
+                                        isCVefound = true;
+                                        goto def;
+                                    }
+                                    catch { }
+                                }
+                                def:
                                 driver.SwitchTo().DefaultContent();
                             }
+                            //creditCard.SendKeys("12/25");
+                            //IWebElement cardCvc = driver.FindElement(By.Name("cvc"));
+                            //creditCard.SendKeys("123");
+                            //void SendKeysToIframe(string iframeSelector, string inputSelector, string keysToSend)
+                            //{
+                            //    IWebElement iframe = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(iframeSelector)));
+                            //    driver.SwitchTo().Frame(iframe);
+                            //    IWebElement inputField = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(inputSelector)));
+                            //    inputField.SendKeys(keysToSend);
+                            //    driver.SwitchTo().DefaultContent();
+                            //}
 
-                            // Send keys to Card Number field
-                            SendKeysToIframe("iframe[src*='cardNumber']", "input", "4242424242424242");
+                            //// Send keys to Card Number field
+                            //SendKeysToIframe("iframe[src*='cardNumber']", "input", "4242424242424242");
 
-                            // Send keys to Expiry Date field
-                            SendKeysToIframe("iframe[src*='cardExpiry']", "input", "12/25");
+                            //// Send keys to Expiry Date field
+                            //SendKeysToIframe("iframe[src*='cardExpiry']", "input", "12/25");
 
-                            // Send keys to CVC field
-                            SendKeysToIframe("iframe[src*='cardCvc']", "input", "123");
+                            //// Send keys to CVC field
+                            //SendKeysToIframe("iframe[src*='cardCvc']", "input", "123");
 
                             Console.WriteLine("All fields filled successfully.");
                         }
@@ -155,7 +206,7 @@ internal class Program
                         }
                         // Place the order
                         IWebElement placeOrderButton = driver.FindElement(By.Id("place_order"));
-                        //placeOrderButton.Click();
+                        placeOrderButton.Click();
 
                         Console.WriteLine("Order placed successfully!");
                         break;
