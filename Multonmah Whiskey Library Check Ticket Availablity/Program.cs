@@ -99,7 +99,7 @@ internal class Program
                         driver.FindElement(By.Id("billing_postcode")).SendKeys(zipCode);
                         driver.FindElement(By.Id("billing_phone")).SendKeys(phoneNumber);
                         driver.FindElement(By.Id("billing_email")).SendKeys(email);
-                       // System.Threading.Thread.Sleep(100000);
+                        // System.Threading.Thread.Sleep(100000);
                         try
                         {
                             //// Fill in credit card details
@@ -137,8 +137,7 @@ internal class Program
                             foreach (IWebElement iframe in iframes)
                             {
                                 //driver.SwitchTo().Frame(iframe);
-                               
-                                
+
                                 driver.SwitchTo().Frame(iframe);
 
                                 if (isCardfound == false)
@@ -146,7 +145,7 @@ internal class Program
                                     try
                                     {
                                         IWebElement creditCard = driver.FindElement(By.Name("cardnumber"));
-                                        creditCard.SendKeys("4242424242424242");
+                                        creditCard.SendKeys(cardNumber);
                                         isCardfound = true;
                                         goto def;
                                     }
@@ -157,24 +156,24 @@ internal class Program
                                     try
                                     {
                                         IWebElement cardExpiry = driver.FindElement(By.Name("exp-date"));
-                                        cardExpiry.SendKeys("12/25");
+                                        cardExpiry.SendKeys(expirationDate.Replace("/", ""));
                                         isExpDatefound = true;
                                         goto def;
                                     }
                                     catch { }
-                                } 
+                                }
                                 if (isCVefound == false)
                                 {
                                     try
                                     {
                                         IWebElement CSV = driver.FindElement(By.Name("cvc"));
-                                        CSV.SendKeys("123");
+                                        CSV.SendKeys(cvc);
                                         isCVefound = true;
                                         goto def;
                                     }
                                     catch { }
                                 }
-                                def:
+                            def:
                                 driver.SwitchTo().DefaultContent();
                             }
                             //creditCard.SendKeys("12/25");
@@ -206,7 +205,7 @@ internal class Program
                         }
                         // Place the order
                         IWebElement placeOrderButton = driver.FindElement(By.Id("place_order"));
-                        placeOrderButton.Click();
+                        //placeOrderButton.Click();
 
                         Console.WriteLine("Order placed successfully!");
                         break;
